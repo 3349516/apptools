@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -191,6 +192,7 @@ public class Main {
 		cmd.add("--no-src");
 		cmd.add("-f");
 		cmd.add(project_path);
+		cmd.add("-o");
 		cmd.add(apkDecodeFolder);
 
 		Process process = null;
@@ -215,8 +217,7 @@ public class Main {
 	public static void replaceChannel(String channel) {
 		System.out.println("Add or replcae channel");
 		try {
-			outPath = new File(apkDecodeFolder, "AndroidManifest.xml")
-					.getAbsolutePath(); 
+			outPath = new File(apkDecodeFolder, "AndroidManifest.xml").getAbsolutePath(); 
 			if (content == null) {
 				content = read(outPath);
 			}
@@ -244,6 +245,7 @@ public class Main {
 			cmd.add(apktool);
 			cmd.add("b");
 			cmd.add(apkDecodeFolder);
+			cmd.add("-o");
 			cmd.add(unsignedApkFile);
 			Process process = null;
 			process = Runtime.getRuntime().exec(cmd.toArray(new String[0]),
@@ -278,7 +280,6 @@ public class Main {
 		cmd.add("SHA1");
 		cmd.add("-sigalg");
 		cmd.add("MD5withRSA");
-
 		Process process = null;
 		try {
 			process = Runtime.getRuntime().exec(cmd.toArray(new String[0]),
@@ -307,8 +308,8 @@ public class Main {
 		}
 
 		List<String> cmd = new ArrayList<String>();
-		//cmd.add("D:\\android-sdk-windows\\tools\\");
-		cmd.add("zipalign");
+		cmd.add("D:\\android-sdk\\build-tools\\22.0.1\\zipalign");
+	//	cmd.add("zipalign");
 		cmd.add("-v");
 		cmd.add("4");
 		cmd.add(unzipalignApkFile);
@@ -428,7 +429,12 @@ public class Main {
 		BufferedReader bf;
 
 		public MyThread(InputStream input) {
-			bf = new BufferedReader(new InputStreamReader(input));
+			try {
+				bf = new BufferedReader(new InputStreamReader(input,"GBK"));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		public void run() {
